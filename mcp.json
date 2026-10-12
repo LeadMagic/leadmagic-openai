@@ -3,17 +3,7 @@
   "mcpServers": {
     "leadmagic": {
       "type": "streamable-http",
-      "url": "https://mcp.leadmagic.io/mcp",
-      "extensions": {
-        "com.openai": {
-          "auth": {
-            "type": "oauth",
-            "client": {
-              "mode": "dcr"
-            }
-          }
-        }
-      }
+      "url": "https://mcp.leadmagic.io/mcp"
     }
   }
 }

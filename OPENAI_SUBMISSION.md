@@ -10,7 +10,7 @@ This folder is the standalone public package for the existing LeadMagic listing.
 - Authentication: OAuth with Dynamic Client Registration
 - Support contact: `support@leadmagic.io`
 
-The package retains the existing identity. Do not create a new listing. The package omits `review.demo_recording_url` and reviewer access fields so previously saved private dashboard values remain intact; verify those fields after upload.
+The package retains the existing identity. Its MCP declaration deliberately omits an authentication override: this approved listing already has OAuth configured, and OpenAI requires updates to reuse that connection. Do not create a new listing. The package omits `review.demo_recording_url` and reviewer access fields so previously saved private dashboard values remain intact; verify those fields after upload.
 
 ## Product scope
 

@@ -50,7 +50,8 @@ if (!existsSync(path.join(root, "skills/leadmagic-tables/SKILL.md"))) errors.pus
 for (const [name, server] of Object.entries(servers ?? {})) {
   if (server.type !== "streamable-http" || server.url !== "https://mcp.leadmagic.io/mcp") errors.push(`${name} must use the public Streamable HTTP MCP endpoint`);
   const auth = server.extensions?.["com.openai"]?.auth;
-  if (auth?.type !== "oauth" || auth?.client?.mode !== "dcr") errors.push(`${name} must configure OAuth Dynamic Client Registration`);
+  if (auth !== undefined) errors.push(`${name} must preserve the existing portal authentication without an auth override`);
+  if (server.headers !== undefined) errors.push(`${name} must not contain credential headers`);
 }
 
 if (errors.length) {
@@ -60,7 +61,7 @@ if (errors.length) {
 
 const outArg = process.argv.find((arg) => arg.startsWith("--out="))?.slice("--out=".length);
 if (!outArg) {
-  console.log(`Manifest valid: ${manifest.name}@${manifest.version}; 5 positive and 3 negative cases; one OAuth DCR MCP server.`);
+  console.log(`Manifest valid: ${manifest.name}@${manifest.version}; 5 positive and 3 negative cases; one hosted MCP server; existing portal OAuth is preserved.`);
   console.log("Pass --out=/absolute/path/plugin.zip to create the upload ZIP.");
   process.exit(0);
 }

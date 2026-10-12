@@ -14,6 +14,6 @@ node scripts/package-openai-plugin.mjs --out=/tmp/leadmagic-openai-plugin-1.0.1.
 unzip -t /tmp/leadmagic-openai-plugin-1.0.1.zip
 ```
 
-The ZIP contains `plugin.json`, `mcp.json`, both referenced icon assets, and the bundled LeadMagic Tables skill. It contains no server implementation or credentials. Upload it as an update to the existing LeadMagic listing; keep its assigned plugin identity and verify the live tool scan and private review details in the OpenAI dashboard before submission.
+The ZIP contains `plugin.json`, `mcp.json`, both referenced icon assets, and the bundled LeadMagic Tables skill. It contains no server implementation or credentials. It preserves the approved listing’s existing OAuth connection without an auth override. Upload it as an update to the existing LeadMagic listing; keep its assigned plugin identity and verify the live tool scan and private review details in the OpenAI dashboard before submission.
 
 See [OPENAI_SUBMISSION.md](OPENAI_SUBMISSION.md) for package and portal checks.
