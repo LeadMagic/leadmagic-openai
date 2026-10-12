@@ -4,7 +4,12 @@
   "version": "1.0.1",
   "description": "Public OpenAI Plugin Directory package for LeadMagic",
   "scripts": {
-    "validate": "node scripts/package-openai-plugin.mjs",
-    "package": "node scripts/package-openai-plugin.mjs"
-  }
+    "typecheck": "tsc --noEmit",
+    "test": "node --test scripts/package-openai-plugin.test.ts",
+    "validate": "npm run typecheck && npm test && node scripts/package-openai-plugin.ts",
+    "package": "node scripts/package-openai-plugin.ts"
+  },
+  "type": "module",
+  "engines": { "node": ">=24.18.0 <25" },
+  "devDependencies": { "@types/node": "24.19.1", "typescript": "7.0.2" }
 }
