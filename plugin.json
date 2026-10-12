@@ -55,7 +55,7 @@
             },
             {
               "description": "Review a connected GTM table and report missing, duplicate, and run-state counts without changing cells.",
-              "prompt": "Use LeadMagic Tables to inspect my GTM table. Summarize its columns, row counts, missing values, and duplicate values. Do not edit or delete anything.",
+              "prompt": "Use LeadMagic Tables to inspect my OpenAI Review Demo table. Summarize its columns, row counts, missing values, and duplicate values. Do not edit or delete anything.",
               "tools_triggered": "list_sheets, get_sheet, get_sheet_stats, read_sheet_rows",
               "expected_behavior": "LeadMagic resolves the table and its stable row and column identifiers, reads the requested data, reports actual missing and duplicate counts, and makes no mutations."
             },
@@ -66,10 +66,10 @@
               "expected_behavior": "LeadMagic creates only the named review table, leaves the original columns unchanged, writes normalized values only to the clean columns, then re-reads the table and reports the verified changes."
             },
             {
-              "description": "Inspect available CRM connections and report their names and statuses without exposing credentials or changing records.",
-              "prompt": "Show the CRM connections in my LeadMagic workspace. List the connected providers and available CRM object types. Do not import or push any records.",
-              "tools_triggered": "list_cloud_connections, list_cloud_crm_objects",
-              "expected_behavior": "LeadMagic reports the available CRM connection names and supported object types, does not reveal secret values, and does not import or push records. If no CRM connections are available, it says so clearly."
+              "description": "Check whether any CRM integrations are connected and report their names and statuses without accessing records.",
+              "prompt": "Check whether my LeadMagic workspace has any connected CRM integrations. If so, list their provider names and connection statuses. If none are connected, say that clearly. Do not inspect CRM objects, import data, or push records.",
+              "tools_triggered": "list_cloud_connections",
+              "expected_behavior": "LeadMagic reports only the connected integration names and statuses returned by the connection inventory. If no CRM integrations are connected, it says so and does not call CRM object tools or access records. It never reveals credential values."
             },
             {
               "description": "Preview the cost of account research without starting the enrichment.",
