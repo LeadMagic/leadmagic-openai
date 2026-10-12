@@ -31,7 +31,7 @@ Read `list_sheet_runs` / `get_sheet_run` and `read_sheet_rows` before claiming s
 
 ## Use connected CRM integrations
 
-Start with `list_cloud_connections`, then inspect supported CRM objects, fields, and filters before `import_cloud_crm`. Review the destination and field mapping before importing. For outbound delivery, verify the destination and mapping before `push_cloud_rows`; honor its confirmation and check `list_cloud_pushes` for delivery results. Cleaning or enriching a table does not imply permission to launch a campaign.
+Start with `list_cloud_connections`. If a CRM is connected and the current tool list exposes the relevant CRM discovery tools, inspect supported objects, fields, and filters before `import_cloud_crm`; review the destination and field mapping before importing. For outbound delivery, use `push_cloud_rows` only when it appears in the current tool list and only after verifying the destination and mapping. Honor its confirmation, and use `list_cloud_pushes` only when that status tool is also exposed. If the current tool list omits these outbound tools, do not call them; explain that outbound delivery is unavailable through this connector. Cleaning or enriching a table does not by itself authorize sending it externally.
 
 Recipes: `export_sheet_recipe` describes a reusable configuration; `import_sheet_recipe` creates a new table. Recipes do not run enrichment automatically, and account credentials are not portable.
 
