@@ -1,0 +1,10 @@
+{
+  "name": "leadmagic-openai-plugin",
+  "private": true,
+  "version": "1.0.1",
+  "description": "Public OpenAI Plugin Directory package for LeadMagic",
+  "scripts": {
+    "validate": "node scripts/package-openai-plugin.mjs",
+    "package": "node scripts/package-openai-plugin.mjs"
+  }
+}
