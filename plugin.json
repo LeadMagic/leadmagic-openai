@@ -22,7 +22,7 @@
       "interface": {
         "displayName": "LeadMagic",
         "shortDescription": "B2B research and data cleanup",
-        "longDescription": "Research company accounts, find business contacts, and organize data in LeadMagic Tables. Inspect missing and duplicate values, preserve original data during cleanup, and review connected CRM integrations. Paid table enrichment presents its scope and credit quote for approval before it runs. Available data and tools depend on your connected LeadMagic workspace and permissions.",
+        "longDescription": "Research company accounts, find business contacts, and organize data in LeadMagic Tables. Inspect missing and duplicate values, preserve original data during cleanup, and review connected CRM integrations. Review the scope and approve table enrichment before it starts. Available data and tools depend on your connected LeadMagic workspace and permissions.",
         "developerName": "LeadMagic Corporation",
         "category": "Business & Operations",
         "capabilities": [
