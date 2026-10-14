@@ -162,6 +162,8 @@ export function validatePackage(directory: string, toolNames?: ReadonlySet<strin
   if (mcp.$schema !== "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json") errors.push("mcp.json must declare the Agent Plugins 1.0.0 schema");
 
   if (manifest.name !== "app-69eb2710b3748191b3eac40b5218144c") errors.push("plugin identity changed");
+  if (record(manifest.author).name !== "LeadMagic Corporation") errors.push("author.name must be LeadMagic Corporation");
+  if (ui.developerName !== "LeadMagic Corporation") errors.push("developerName must be LeadMagic Corporation");
   if (typeof manifest.version !== "string" || !/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/.test(manifest.version) || manifest.version !== packageMetadata.version) errors.push("plugin and package versions must match and use semantic versioning");
   if (!isRecord(openai.interface)) errors.push("OpenAI listing interface is missing");
   if (positive.length !== 5) errors.push("exactly five positive review cases are required");

@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "app-69eb2710b3748191b3eac40b5218144c",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Research B2B accounts, find contacts, and review LeadMagic tables and CRM connections.",
   "author": {
     "name": "LeadMagic Corporation",
@@ -42,10 +42,15 @@
           "Show my connected CRM integrations."
         ],
         "composerIcon": "./chatgpt-composer-icon.png",
-        "logo": "./icon.png"
+        "logo": "./icon.png",
+        "screenshots": [
+          "./screenshots/01-gong-account-research.png",
+          "./screenshots/02-gtm-table-quality.png",
+          "./screenshots/03-crm-integrations.png"
+        ]
       },
       "review": {
-        "demo_recording_url": "https://pub-732c47e331664c31baf14e93045ff476.r2.dev/openai-review/leadmagic-1.0.1-2026-10-12.mp4",
+        "demo_recording_url": "https://pub-732c47e331664c31baf14e93045ff476.r2.dev/openai-review/leadmagic-1.0.3-2026-10-13.mp4",
         "test_cases": {
           "positive": [
             {
@@ -55,15 +60,15 @@
               "expected_behavior": "LeadMagic previews the account-intelligence cost before running the requested research, then returns a concise account summary grounded in available results. It does not invent missing facts."
             },
             {
-              "description": "Review a connected GTM table and report missing, duplicate, and run-state counts without changing cells.",
-              "prompt": "Use LeadMagic Tables to inspect my OpenAI Review Demo table. Summarize its columns, row counts, missing values, and duplicate values. Do not edit or delete anything.",
+              "description": "Review a connected GTM table and verify missing and duplicate counts from all rows without changing cells.",
+              "prompt": "Use LeadMagic Tables to inspect my OpenAI Review Demo table. Resolve its table ID and columns, fetch its statistics, then use read_sheet_rows with pagination to read every row. Verify the row count and compute missing and duplicate values per column from those rows. State the matching rule and report any discrepancies with the statistics. Do not edit or delete anything.",
               "tools_triggered": "list_sheets, get_sheet, get_sheet_stats, read_sheet_rows",
-              "expected_behavior": "LeadMagic resolves the table and its stable row and column identifiers, reads the requested data, reports actual missing and duplicate counts, and makes no mutations."
+              "expected_behavior": "LeadMagic resolves the table and its stable row and column identifiers, fetches statistics, and reads every row through read_sheet_rows pagination. It verifies the row count, reports missing and duplicate counts computed from those rows with a stated matching rule, explains any discrepancy with the statistics, and makes no mutations. If a read is incomplete or fails, it states the inspected scope and does not claim whole-table counts."
             },
             {
               "description": "Clean an explicitly requested new review table while preserving the original values and limiting edits to the authorized cells.",
               "prompt": "Create a new table named OpenAI review cleanup with columns Company (original), Domain (original), Company (clean), and Domain (clean). Add these rows: '  Acme, Inc.  ' with 'HTTPS://ACME.EXAMPLE/'; and 'Beta LLC' with ' beta.example '. Keep the original columns unchanged. Normalize whitespace and domain format in the clean columns. Do not touch another table.",
-              "tools_triggered": "create_sheet, add_sheet_rows, set_sheet_cells, read_sheet_rows",
+              "tools_triggered": "create_sheet, add_sheet_rows, read_sheet_rows",
               "expected_behavior": "LeadMagic uses the user's explicit authorization to create only the named review table and populate its requested columns. It leaves the original columns unchanged, writes normalized values only to the clean columns, then re-reads the table and reports the verified changes. Any tool confirmation request still requires the user's approval."
             },
             {
@@ -81,7 +86,7 @@
           ],
           "negative": [
             {
-              "description": "Calendar access is outside LeadMagic's scope. Do not call LeadMagic; explain that a calendar connection is needed.",
+              "description": "Calendar access is outside LeadMagic's scope. Do not call LeadMagic; use an available calendar connection or explain that a calendar connection is needed.",
               "prompt": "What meetings do I have tomorrow?"
             },
             {
@@ -98,7 +103,7 @@
         "commerce_description": "LeadMagic provides business data and workspace tools. This plugin does not sell products or process payments."
       },
       "publication": {
-        "release_notes": "Clarify the listing and review cases, strengthen paid-run and scoped-edit instructions, and validate the public package's MCP configuration, review tools, and declared images."
+        "release_notes": "Add screenshots from authenticated ChatGPT review cases. Require paginated row reads before whole-table quality conclusions, clarify incomplete-read reporting, and align review expectations with the verified table creation and calendar behavior."
       }
     }
   }
