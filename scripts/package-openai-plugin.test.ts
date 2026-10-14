@@ -74,6 +74,16 @@ test("credentials and reviewer instructions cannot enter the public package", ()
   assert.ok(validatePackage(directory).some(error => error.includes("secure portal")));
 });
 
+test("public author and developer identity must be LeadMagic Corporation", () => {
+  const authorFixture = fixture();
+  editManifest(authorFixture, manifest => { (manifest.author as JsonRecord).name = "Different Publisher"; });
+  assert.ok(validatePackage(authorFixture).some(error => error.includes("author.name must be LeadMagic Corporation")));
+
+  const developerFixture = fixture();
+  editManifest(developerFixture, manifest => { listing(manifest).developerName = "LeadMagic"; });
+  assert.ok(validatePackage(developerFixture).some(error => error.includes("developerName must be LeadMagic Corporation")));
+});
+
 test("authored JavaScript and credential headers fail validation", () => {
   const directory = fixture();
   writeFileSync(path.join(directory, "unsafe.mjs"), "export {};\n");
