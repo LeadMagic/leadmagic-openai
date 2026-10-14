@@ -16,7 +16,7 @@ npm run package -- --out=/tmp/leadmagic-openai-plugin.zip
 
 Support: [LeadMagic Support](https://leadmagic.io/docs/support) · [Privacy](https://leadmagic.io/legal/privacy) · [Terms](https://leadmagic.io/legal/terms)
 
-The validator checks the stable plugin identity, listing limits, review tool names, and one hosted HTTPS MCP without embedded credentials, headers, or an authentication override. It rejects app references, lifecycle hooks, unsafe paths, symlinked package files, and obsolete paid-run instructions. Declared screenshots must be distinct PNG/JPEG assets, one per starter prompt, each 706 pixels wide and 400–860 pixels tall, at most 5 MiB.
+The validator checks the stable plugin identity, listing limits, review tool names, and one hosted HTTPS MCP without embedded credentials, headers, or an authentication override. It rejects app references, lifecycle hooks, unsafe paths, symlinked package files, and obsolete paid-run instructions. This package uses PNG images; validation checks their chunks, checksums, and bounded decompressed pixel data. Declared screenshots must be distinct PNG assets, one per starter prompt, each 706 pixels wide and 400–860 pixels tall, at most 5 MiB.
 
 The upload ZIP contains only the plugin manifest, MCP connection metadata, declared images, and the Tables skill. Packaging creates a fresh archive, so previous ZIP contents cannot survive. Registry metadata, build tools, repository files, and undeclared assets are excluded. Write the ZIP outside this repository. Keep reviewer credentials and sign-in instructions in the secure OpenAI review form; OpenAI rejects them in ZIP metadata.
 

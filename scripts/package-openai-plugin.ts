@@ -76,7 +76,7 @@ function safeFile(directory: string, relative: string, errors: string[]): boolea
   } catch { errors.push(`missing package file: ${relative}`); return false; }
 }
 
-function imageDimensions(data: Buffer): { format: "png" | "jpeg"; width: number; height: number } | undefined {
+function pngDimensions(data: Buffer): { width: number; height: number } | undefined {
   if (data.length >= 33 && data.subarray(0, 8).equals(Buffer.from([137, 80, 78, 71, 13, 10, 26, 10])) && data.toString("ascii", 12, 16) === "IHDR" && data.readUInt32BE(8) === 13) {
     const width = data.readUInt32BE(16), height = data.readUInt32BE(20);
     const bits = data[24]!, color = data[25]!, interlace = data[28]!;
@@ -119,23 +119,7 @@ function imageDimensions(data: Buffer): { format: "png" | "jpeg"; width: number;
         position += row.widthBytes + 1;
       }
     } catch { return; }
-    return { format: "png", width, height };
-  }
-  if (data.length < 4 || data[0] !== 0xff || data[1] !== 0xd8 || data[data.length - 2] !== 0xff || data[data.length - 1] !== 0xd9) return;
-  let offset = 2;
-  while (offset < data.length) {
-    if (data[offset++] !== 0xff) break;
-    while (data[offset] === 0xff) offset++;
-    const marker = data[offset++];
-    if (marker === 0xd9 || marker === 0xda) break;
-    if (marker === 0x01 || (marker !== undefined && marker >= 0xd0 && marker <= 0xd7)) continue;
-    if (offset + 2 > data.length) break;
-    const length = data.readUInt16BE(offset);
-    if (length < 2 || offset + length > data.length) break;
-    if (marker !== undefined && [0xc0, 0xc1, 0xc2, 0xc3, 0xc5, 0xc6, 0xc7, 0xc9, 0xca, 0xcb, 0xcd, 0xce, 0xcf].includes(marker) && length >= 8) {
-      return { format: "jpeg", width: data.readUInt16BE(offset + 5), height: data.readUInt16BE(offset + 3) };
-    }
-    offset += length;
+    return { width, height };
   }
 }
 
@@ -145,9 +129,8 @@ function validateImage(directory: string, value: unknown, label: string, errors:
   if (!safeFile(directory, relative, errors)) return;
   const data = readFileSync(path.join(directory, relative));
   if (data.length > maxImageBytes) errors.push(`${label} exceeds 5 MiB`);
-  const dimensions = imageDimensions(data);
-  if (!dimensions || !/\.(png|jpe?g)$/i.test(relative)) { errors.push(`${label} must contain a PNG or JPEG image with readable dimensions`); return; }
-  if ((/\.png$/i.test(relative) ? "png" : "jpeg") !== dimensions.format) errors.push(`${label} extension does not match the image format`);
+  const dimensions = pngDimensions(data);
+  if (!dimensions || !/\.png$/i.test(relative)) { errors.push(`${label} must contain a valid PNG image with a .png extension`); return; }
   if (screenshot) {
     if (dimensions.width !== 706 || dimensions.height < 400 || dimensions.height > 860) errors.push(`${label} must be 706 pixels wide and 400-860 pixels tall`);
   } else if (dimensions.width !== dimensions.height || dimensions.width < 48 || dimensions.width > 4096) errors.push(`${label} must be square and between 48 and 4096 pixels`);

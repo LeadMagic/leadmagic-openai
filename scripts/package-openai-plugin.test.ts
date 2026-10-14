@@ -169,7 +169,7 @@ test("screenshot dimensions, size, and extension must meet final submission limi
   const wrongExtension = "./assets/wrong.jpg";
   writeFileSync(path.join(directory, wrongExtension), png(706, 400));
   editManifest(directory, manifest => { listing(manifest).screenshots = [wrongExtension, ...screenshots.slice(1)]; });
-  assert.ok(validatePackage(directory).some(error => error.includes("extension does not match")));
+  assert.ok(validatePackage(directory).some(error => error.includes("valid PNG image")));
 });
 
 test("skill symlinks and obsolete automatic-paid-run instructions fail", () => {
@@ -189,11 +189,19 @@ test("a truncated or corrupt PNG cannot pass as a listing image", () => {
   const directory = fixture();
   const complete = png(48, 48);
   writeFileSync(path.join(directory, "icon.png"), complete.subarray(0, 33));
-  assert.ok(validatePackage(directory).some(error => error.includes("PNG or JPEG")));
+  assert.ok(validatePackage(directory).some(error => error.includes("valid PNG image")));
   const corrupt = Buffer.from(complete);
   corrupt[40] = corrupt[40]! ^ 1;
   writeFileSync(path.join(directory, "icon.png"), corrupt);
-  assert.ok(validatePackage(directory).some(error => error.includes("PNG or JPEG")));
+  assert.ok(validatePackage(directory).some(error => error.includes("valid PNG image")));
+});
+
+test("JPEG headers without image data cannot pass as a listing image", () => {
+  const directory = fixture();
+  const filename = "./fake.jpg";
+  writeFileSync(path.join(directory, filename), Buffer.from([0xff, 0xd8, 0xff, 0xc0, 0x00, 0x08, 0x08, 0x00, 0x30, 0x00, 0x30, 0x03, 0xff, 0xd9]));
+  editManifest(directory, manifest => { listing(manifest).logo = filename; });
+  assert.ok(validatePackage(directory).some(error => error.includes("valid PNG image")));
 });
 
 test("ZIP output cannot use symlinks or an alias back inside the source package", () => {
