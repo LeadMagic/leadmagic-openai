@@ -50,7 +50,7 @@
         ]
       },
       "review": {
-        "demo_recording_url": "https://pub-732c47e331664c31baf14e93045ff476.r2.dev/openai-review/leadmagic-1.0.3-2026-10-13.mp4",
+        "demo_recording_url": "https://lm-mcp-carousel-host.leadmagic.sh/openai-review/leadmagic-1.0.3-2026-10-13.mp4",
         "test_cases": {
           "positive": [
             {
