@@ -34,7 +34,7 @@ function fixture(): string {
   return directory;
 }
 
-function png(width: number, height: number): Buffer {
+function png(width: number, height: number, color = 6): Buffer {
   function chunk(type: string, bytes: Buffer): Buffer {
     const body = Buffer.concat([Buffer.from(type), bytes]);
     let crc = 0xffffffff;
@@ -44,8 +44,9 @@ function png(width: number, height: number): Buffer {
     return Buffer.concat([length, body, checksum]);
   }
   const header = Buffer.alloc(13);
-  header.writeUInt32BE(width); header.writeUInt32BE(height, 4); header[8] = 8; header[9] = 6;
-  return Buffer.concat([Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]), chunk("IHDR", header), chunk("IDAT", deflateSync(Buffer.alloc((width * 4 + 1) * height))), chunk("IEND", Buffer.alloc(0))]);
+  header.writeUInt32BE(width); header.writeUInt32BE(height, 4); header[8] = 8; header[9] = color;
+  const palette = color === 3 ? [chunk("PLTE", Buffer.alloc(0))] : [];
+  return Buffer.concat([Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]), chunk("IHDR", header), ...palette, chunk("IDAT", deflateSync(Buffer.alloc((width * (color === 3 ? 1 : 4) + 1) * height))), chunk("IEND", Buffer.alloc(0))]);
 }
 
 function addScreenshots(directory: string, width = 706, height = 400): string[] {
@@ -201,6 +202,12 @@ test("JPEG headers without image data cannot pass as a listing image", () => {
   const filename = "./fake.jpg";
   writeFileSync(path.join(directory, filename), Buffer.from([0xff, 0xd8, 0xff, 0xc0, 0x00, 0x08, 0x08, 0x00, 0x30, 0x00, 0x30, 0x03, 0xff, 0xd9]));
   editManifest(directory, manifest => { listing(manifest).logo = filename; });
+  assert.ok(validatePackage(directory).some(error => error.includes("valid PNG image")));
+});
+
+test("an indexed PNG with an empty palette cannot pass as a listing image", () => {
+  const directory = fixture();
+  writeFileSync(path.join(directory, "icon.png"), png(48, 48, 3));
   assert.ok(validatePackage(directory).some(error => error.includes("valid PNG image")));
 });
 

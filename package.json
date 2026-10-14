@@ -10,6 +10,13 @@
     "package": "node scripts/package-openai-plugin.ts"
   },
   "type": "module",
-  "engines": { "node": ">=24.18.0 <25" },
-  "devDependencies": { "@types/node": "24.19.1", "typescript": "7.0.2" }
+  "engines": {
+    "node": ">=24.18.0 <25"
+  },
+  "devDependencies": {
+    "@types/node": "24.19.1",
+    "@types/pngjs": "6.0.5",
+    "pngjs": "7.0.0",
+    "typescript": "7.0.2"
+  }
 }

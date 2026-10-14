@@ -4,7 +4,7 @@ import { spawnSync } from "node:child_process";
 import { existsSync, lstatSync, mkdtempSync, readFileSync, readdirSync, realpathSync, renameSync, rmSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { inflateSync } from "node:zlib";
+import { PNG } from "pngjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 const basePackageFiles = ["plugin.json", "mcp.json", "skills/leadmagic-tables/SKILL.md"];
@@ -77,58 +77,35 @@ function safeFile(directory: string, relative: string, errors: string[]): boolea
 }
 
 function pngDimensions(data: Buffer): { width: number; height: number } | undefined {
-  if (data.length >= 33 && data.subarray(0, 8).equals(Buffer.from([137, 80, 78, 71, 13, 10, 26, 10])) && data.toString("ascii", 12, 16) === "IHDR" && data.readUInt32BE(8) === 13) {
-    const width = data.readUInt32BE(16), height = data.readUInt32BE(20);
-    const bits = data[24]!, color = data[25]!, interlace = data[28]!;
-    const channels = new Map([[0, 1], [2, 3], [3, 1], [4, 2], [6, 4]]).get(color);
-    const allowedBits = color === 0 ? [1, 2, 4, 8, 16] : color === 3 ? [1, 2, 4, 8] : [8, 16];
-    if (!width || !height || !channels || !allowedBits.includes(bits) || data[26] !== 0 || data[27] !== 0 || ![0, 1].includes(interlace)) return;
-    // Bound decode allocation before checking the image's compressed stream.
-    if (width > 4096 || height > 4096 || data.length > maxImageBytes) return;
-    const compressed: Buffer[] = [];
-    let offset = 8, ended = false, palette = false;
-    while (offset + 12 <= data.length) {
-      const length = data.readUInt32BE(offset);
-      if (length > data.length - offset - 12) return;
-      const type = data.toString("ascii", offset + 4, offset + 8);
-      const body = data.subarray(offset + 4, offset + 8 + length);
-      let crc = 0xffffffff;
-      for (const byte of body) { crc ^= byte; for (let bit = 0; bit < 8; bit++) crc = crc & 1 ? (crc >>> 1) ^ 0xedb88320 : crc >>> 1; }
-      if (((crc ^ 0xffffffff) >>> 0) !== data.readUInt32BE(offset + 8 + length)) return;
-      if (type === "IHDR" && offset !== 8) return;
-      if (type === "PLTE") palette = true;
-      if (type === "IDAT") compressed.push(data.subarray(offset + 8, offset + 8 + length));
-      offset += length + 12;
-      if (type === "IEND") { if (length !== 0) return; ended = true; break; }
-    }
-    if (!ended || offset !== data.length || !compressed.length || (color === 3 && !palette)) return;
-    const passes = interlace ? [[0, 0, 8, 8], [4, 0, 8, 8], [0, 4, 4, 8], [2, 0, 4, 4], [0, 2, 2, 4], [1, 0, 2, 2], [0, 1, 1, 2]] : [[0, 0, 1, 1]];
-    const rows: { widthBytes: number; count: number }[] = [];
-    for (const [startX, startY, stepX, stepY] of passes) {
-      const passWidth = Math.max(0, Math.ceil((width - startX!) / stepX!));
-      const count = Math.max(0, Math.ceil((height - startY!) / stepY!));
-      if (passWidth && count) rows.push({ widthBytes: Math.ceil(passWidth * channels * bits / 8), count });
-    }
-    const expectedBytes = rows.reduce((total, row) => total + (row.widthBytes + 1) * row.count, 0);
-    try {
-      const decoded = inflateSync(Buffer.concat(compressed), { maxOutputLength: expectedBytes });
-      if (decoded.length !== expectedBytes) return;
-      let position = 0;
-      for (const row of rows) for (let index = 0; index < row.count; index++) {
-        if (decoded[position]! > 4) return;
-        position += row.widthBytes + 1;
-      }
-    } catch { return; }
-    return { width, height };
+  if (data.length < 33 || data.length > maxImageBytes || !data.subarray(0, 8).equals(Buffer.from([137, 80, 78, 71, 13, 10, 26, 10])) || data.toString("ascii", 12, 16) !== "IHDR" || data.readUInt32BE(8) !== 13) return;
+  const width = data.readUInt32BE(16), height = data.readUInt32BE(20);
+  // pngjs bounds noninterlaced inflation by dimensions; its interlaced sync path
+  // is unbounded. Keep this package's assets noninterlaced and bound before decode.
+  if (!width || !height || width > 4096 || height > 4096 || data[28] !== 0) return;
+  let offset = 8, ended = false;
+  while (offset + 12 <= data.length) {
+    const length = data.readUInt32BE(offset);
+    if (length > data.length - offset - 12) return;
+    const type = data.toString("ascii", offset + 4, offset + 8);
+    // A second IHDR could change the dimensions after the initial bounds check.
+    if (type === "IHDR" && offset !== 8) return;
+    offset += length + 12;
+    if (type === "IEND") { if (length !== 0) return; ended = true; break; }
   }
+  if (!ended || offset !== data.length) return;
+  try {
+    const decoded = PNG.sync.read(data, { checkCRC: true });
+    if (decoded.width !== width || decoded.height !== height || decoded.data.length !== width * height * 4) return;
+    return { width, height };
+  } catch { return; }
 }
 
 function validateImage(directory: string, value: unknown, label: string, errors: string[], screenshot = false): void {
   if (typeof value !== "string" || !value.startsWith("./")) { errors.push(`${label} must use a ./-prefixed asset path`); return; }
   const relative = value.slice(2);
   if (!safeFile(directory, relative, errors)) return;
+  if (lstatSync(path.join(directory, relative)).size > maxImageBytes) { errors.push(`${label} exceeds 5 MiB`); return; }
   const data = readFileSync(path.join(directory, relative));
-  if (data.length > maxImageBytes) errors.push(`${label} exceeds 5 MiB`);
   const dimensions = pngDimensions(data);
   if (!dimensions || !/\.png$/i.test(relative)) { errors.push(`${label} must contain a valid PNG image with a .png extension`); return; }
   if (screenshot) {
