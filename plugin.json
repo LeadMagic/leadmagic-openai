@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "app-69eb2710b3748191b3eac40b5218144c",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Research B2B accounts, find contacts, and review LeadMagic tables and CRM connections.",
   "author": {
     "name": "LeadMagic Corporation",
