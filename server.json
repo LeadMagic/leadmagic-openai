@@ -3,7 +3,7 @@
   "name": "io.leadmagic/server",
   "title": "LeadMagic",
   "description": "Research B2B accounts, enrich contacts, and clean and enrich your LeadMagic sheets through OAuth.",
-  "version": "2.23.4",
+  "version": "2.23.5",
   "websiteUrl": "https://leadmagic.io",
   "repository": {
     "source": "github",
