@@ -2,9 +2,30 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.leadmagic/server",
   "title": "LeadMagic",
-  "description": "Research B2B accounts, enrich contacts, and clean LeadMagic Tables through OAuth.",
+  "description": "Research B2B accounts, enrich contacts, and clean and enrich your LeadMagic sheets through OAuth.",
   "version": "2.23.4",
   "websiteUrl": "https://leadmagic.io",
+  "repository": {
+    "source": "github",
+    "url": "https://github.com/LeadMagic/leadmagic-openai"
+  },
+  "icons": [
+    {
+      "src": "https://mcp.leadmagic.io/icon.svg?v=20260806",
+      "mimeType": "image/svg+xml",
+      "sizes": ["any"]
+    },
+    {
+      "src": "https://mcp.leadmagic.io/icon-192.png?v=20260806",
+      "mimeType": "image/png",
+      "sizes": ["192x192"]
+    },
+    {
+      "src": "https://mcp.leadmagic.io/icon-512.png?v=20260806",
+      "mimeType": "image/png",
+      "sizes": ["512x512"]
+    }
+  ],
   "remotes": [
     {
       "type": "streamable-http",
