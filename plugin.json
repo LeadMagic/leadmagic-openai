@@ -103,7 +103,7 @@
         "commerce_description": "LeadMagic provides business data and workspace tools. This plugin does not sell products or process payments."
       },
       "publication": {
-        "release_notes": "Add screenshots from authenticated ChatGPT review cases. Require paginated row reads before whole-table quality conclusions, clarify incomplete-read reporting, and align review expectations with the verified table creation and calendar behavior."
+        "release_notes": "LeadMagic in ChatGPT: research company accounts, find and validate business contacts, and build, clean, and enrich LeadMagic Tables, including records from your connected CRM. Sign in with your LeadMagic account (OAuth, no API key). Lookups use your existing LeadMagic credits, cost previews are free, and table enrichment asks before it starts."
       }
     }
   }
