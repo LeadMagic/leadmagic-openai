@@ -33,7 +33,7 @@
           "Clean and enrich table rows"
         ],
         "websiteURL": "https://leadmagic.io",
-        "supportURL": "https://leadmagic.io/docs/support",
+        "supportURL": "https://leadmagic.io/docs/v1/support",
         "privacyPolicyURL": "https://leadmagic.io/legal/privacy",
         "termsOfServiceURL": "https://leadmagic.io/legal/terms",
         "defaultPrompt": [

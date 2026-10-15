@@ -14,7 +14,7 @@ npm run validate
 npm run package -- --out=/tmp/leadmagic-openai-plugin.zip
 ```
 
-Support: [LeadMagic Support](https://leadmagic.io/docs/support) · [Privacy](https://leadmagic.io/legal/privacy) · [Terms](https://leadmagic.io/legal/terms)
+Support: [LeadMagic Support](https://leadmagic.io/docs/v1/support) · [Privacy](https://leadmagic.io/legal/privacy) · [Terms](https://leadmagic.io/legal/terms)
 
 The validator requires the public author name and developer name to be exactly **LeadMagic Corporation**. It checks the stable plugin identity, listing limits, review tool names, and one hosted HTTPS MCP without embedded credentials, headers, or an authentication override. It rejects app references, lifecycle hooks, unsafe paths, symlinked package files, and obsolete paid-run instructions. This package uses noninterlaced PNG images, decoded with pinned `pngjs` after checking file size and dimensions. Declared screenshots must be distinct PNG assets, one per starter prompt, each 706 pixels wide and 400–860 pixels tall, at most 5 MiB.
 
@@ -34,10 +34,10 @@ Use the existing LeadMagic entry in the OpenAI submission portal and the **With 
 
 Run all five positive and three negative review cases using the review account and provide an accessible demo recording that demonstrates the current package. Local validation does not verify live tool behavior or complete directory review.
 
-Package rules: [OpenAI submission guide](https://developers.openai.com/plugins/deploy/submission) · [Submission errors](https://developers.openai.com/plugins/deploy/submission-errors) · [Plugin guidelines](https://developers.openai.com/plugins/plugin-guidelines).
+Package rules: [OpenAI submission guide](https://developers.openai.com/apps-sdk/deploy/submission) · [Submission errors](https://developers.openai.com/apps-sdk/deploy/submission-errors) · [Plugin guidelines](https://developers.openai.com/apps-sdk/plugin-guidelines).
 
 ## Official MCP Registry
 
-`server.json` publishes LeadMagic's hosted MCP endpoint to the [Official MCP Registry](https://registry.modelcontextprotocol.io/v0.1/servers?search=io.leadmagic%2Fserver). It uses the `io.leadmagic` domain namespace and a Streamable HTTP connection; clients authenticate through the service's OAuth flow. This repository contains public connection and listing metadata only, not the hosted server implementation.
+`server.json` publishes LeadMagic's hosted MCP endpoint to the [Official MCP Registry](https://registry.modelcontextprotocol.io/v0/servers?search=leadmagic). It uses the `io.leadmagic` domain namespace and a Streamable HTTP connection; clients authenticate through the service's OAuth flow. This repository contains public connection and listing metadata only, not the hosted server implementation.
 
 Validate the listing before publishing with `mcp-publisher validate server.json`.
