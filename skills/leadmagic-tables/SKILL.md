@@ -10,7 +10,7 @@ Use the connected LeadMagic MCP server for structured B2B data and workspace act
 ## Account and contact research
 
 - Use `account_intel` for a company briefing, `research_account` for a lighter snapshot, and `enrich_company` for firmographics. Prefer a known company domain over an ambiguous company name.
-- Use `enrich_contact` for a contact dossier and `find_decision_makers` for leadership. Search returns discovery records; request email or mobile enrichment only when the user asks for that channel.
+- Use `enrich_contact` for a contact dossier and `find_decision_makers` for leadership. To find who holds one role or title at a company, call `find_people_by_role` first (2 credits if found, free on a miss); if it finds no one, report the miss rather than answering from people search. In a table, use the `role_finder` column for the same ask. Search returns discovery records; request email or mobile enrichment only when the user asks for that channel.
 - `check_credit_balance` identifies the connected account/workspace and available credits. Use the free `preview_cost` before paid research or batches, and keep the scope within the user's request. A request for a cost estimate never authorizes the paid tool. Missing, unavailable, failed, and not-found results are different; preserve them.
 
 ## Inspect and clean a table
