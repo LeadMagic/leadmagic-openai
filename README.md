@@ -34,6 +34,8 @@ Use the existing LeadMagic entry in the OpenAI submission portal and the **With 
 
 Run all five positive and three negative review cases using the review account and provide an accessible demo recording that demonstrates the current package. Local validation does not verify live tool behavior or complete directory review.
 
+The demo recording is managed in the existing submission's **Review information → Supporting content** field. Set it to the [current review recording](https://lm-mcp-carousel-host.leadmagic.sh/openai-review/leadmagic-1.0.3-2026-10-13.mp4) and save the details. The manifest deliberately omits `review.demo_recording_url` so the dashboard value remains editable and can be verified before submission. Keep this public HTTPS recording accessible without sign-in, including byte-range requests from automated clients.
+
 Package rules: [OpenAI submission guide](https://developers.openai.com/apps-sdk/deploy/submission) · [Submission errors](https://developers.openai.com/apps-sdk/deploy/submission-errors) · [Plugin guidelines](https://developers.openai.com/apps-sdk/plugin-guidelines).
 
 ## Official MCP Registry
